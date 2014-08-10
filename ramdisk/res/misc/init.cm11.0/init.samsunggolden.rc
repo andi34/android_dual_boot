@@ -54,9 +54,8 @@ on init
 
 on fs
     mount_all /fstab.samsunggolden
-    # blackhawk: mount /system as ext4 or f2fs filesystem
+    # blackhawk: mount /system as ext4
     mount ext4 /dev/block/mmcblk0p22 /system rw noatime nodiratime wait
-    mount f2fs /dev/block/mmcblk0p22 /system rw noatime nodiratime background_gc=off inline_xattr active_logs=2 wait
 
     # blackhawk: link /system/lib/modules to /lib/modules
     exec /sbin/ext/modules.sh
