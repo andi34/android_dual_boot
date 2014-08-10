@@ -1,0 +1,17 @@
+# Ketut P. Kumajaya, May 2013, Mar 2014
+# Do not remove above credits header!
+
+on early-init
+    start ueventd
+    start killer
+    exec /sbin/bootmenu.sh
+    stop ueventd
+    exec /sbin/init2
+
+service ueventd /sbin/ueventd
+    critical
+
+service killer /sbin/killer.sh
+    user root
+    disabled
+    oneshot

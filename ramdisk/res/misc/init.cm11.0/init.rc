@@ -411,6 +411,7 @@ on boot
 # Define default initial receive window size in segments.
     setprop net.tcp.default_init_rwnd 60
 
+on property:blackhawk_next.ready=1
     class_start core
     class_start main
 

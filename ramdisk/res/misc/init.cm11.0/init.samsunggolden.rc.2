@@ -54,6 +54,17 @@ on init
 
 on fs
     mount_all /fstab.samsunggolden
+
+    # blackhawk: bind mount 2nd ROM's data to /data
+    exec /sbin/ext/db-bindmount.sh
+
+    # blackhawk: mount /system as ext4 or f2fs filesystem
+    mount ext4 loop@/.secondrom/media/.secondrom/system.img /system rw noatime nodiratime wait
+    mount f2fs loop@/.secondrom/media/.secondrom/system.img /system rw noatime nodiratime background_gc=off inline_xattr active_logs=2 wait
+
+    # blackhawk: link /system/lib/modules to /lib/modules
+    exec /sbin/ext/modules.sh
+
     setprop ro.crypto.fuse_sdcard true
     start cspsa
 
@@ -437,10 +448,16 @@ on boot
     class_start modem
     class_start default
 
+    # blackhawk: busybox permissions for ordinary users
+    chmod 0755 /sbin
+    chmod 0755 /sbin/busybox
+
 # Create virtual SD card at /mnt/sdcard, based on the /data/media directory
 # daemon will drop to user/group system/media_rw after initializing
 # underlying files in /data/media wil be created with user and group media_rw (1023)
-service sdcard /system/bin/sdcard -u 1023 -g 1023 -l /data/media /mnt/shell/emulated
+# service sdcard /system/bin/sdcard -u 1023 -g 1023 -l /data/media /mnt/shell/emulated
+# blackhawk: create virtual SD card at /mnt/sdcard, based on the /.secondrom/media directory
+service sdcard /system/bin/sdcard -u 1023 -g 1023 -l /.secondrom/media /mnt/shell/emulated
     class late_start
 
 service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
@@ -544,3 +561,13 @@ service iprenew_bt-pan /system/bin/dhcpcd -n
 	class main
 	disabled
 	oneshot
+
+# blackhawk: Chainfire's system patch
+on boot
+    start cfpatch
+    write /data/sync_fifo sync
+
+service cfpatch /sbin/boot-patch.sh
+    user root
+    disabled
+    oneshot

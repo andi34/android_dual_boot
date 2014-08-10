@@ -1,0 +1,3 @@
+# From gokhanmoral's siyah kernel initramfs
+
+# nothing at the moment, maybe later...

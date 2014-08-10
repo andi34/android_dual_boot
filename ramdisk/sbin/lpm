@@ -1,0 +1,9 @@
+#!/sbin/busybox sh
+
+# Ketut P. Kumajaya, Nov 2013
+# based on gokhanmoral's ramfs for SGS3
+# Do not remove above credits header!
+
+/sbin/busybox mv /innt /init
+cd /
+exec /init 
