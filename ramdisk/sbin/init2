@@ -39,7 +39,6 @@ CM110=0
 /sbin/busybox [ -f /system/priv-app/Settings.apk ] && CM110=1
 
 if /sbin/busybox [ "$CM110" == 1 ]; then
-  /sbin/busybox echo 1 > /proc/sys/kernel/rom_feature_set
   /sbin/busybox mv -f /res/misc/init.cm11.0/* /
   /sbin/busybox mv -f /res/misc/init.cm11.0/sbin/* /sbin/
   /sbin/busybox mv -f /res/misc/init.cm11.0/sbin/boot/* /sbin/boot/
