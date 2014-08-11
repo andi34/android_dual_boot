@@ -29,9 +29,9 @@ CACHEDEV="/dev/block/mmcblk0p23"
 # Normal boot
 /sbin/busybox rm -f /sbin/lpm
 /sbin/busybox mkdir -p /dev/block
-/sbin/busybox mknod $CACHEDEV b 259 3; # /cache
-/sbin/busybox mknod $SYSTEMDEV b 259 4; # /system
-/sbin/busybox mknod $DATADEV b 259 5; # /data
+/sbin/busybox mknod $CACHEDEV b 179 23; # /cache
+/sbin/busybox mknod $SYSTEMDEV b 179 22; # /system
+/sbin/busybox mknod $DATADEV b 179 25; # /data
 /sbin/busybox mknod /dev/block/loop0 b 7 0
 
 /sbin/busybox mkdir /mnt
