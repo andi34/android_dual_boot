@@ -1,3 +1,6 @@
+# CyanogenMod Extras
+import /init.superuser.rc
+
 # Omni Extras
 
 on init
