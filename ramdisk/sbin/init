@@ -1,6 +1,6 @@
 #!/sbin/busybox sh
 
-# Ketut P. Kumajaya, Apr 2013, Nov 2013, Mar 2014
+# Ketut P. Kumajaya, Apr 2013, Nov 2013, Mar 2014, Aug 2014
 # based on gokhanmoral's ramfs for SGS3
 # Do not remove above credits header!
 
@@ -10,27 +10,27 @@ cd /
 /sbin/busybox mount -t sysfs sysfs /sys
 
 # Charging, low power mode
-# if /sbin/busybox grep -q 1 /sys/class/power_supply/battery/batt_lp_charging ; then
-#  /sbin/busybox echo 0 > /proc/sys/kernel/rom_feature_set
-#  /sbin/busybox mv -f /res/misc/init.42/* /
-#  /sbin/busybox chmod 755 /innt
-#  /sbin/busybox chmod 644 /*.samsunggolden*
-#  /sbin/busybox chmod 644 /*.rc
-#  /sbin/busybox chmod 644 /*.prop
-#  exec /sbin/lpm
-#fi
+if /sbin/busybox grep -q 1 /sys/class/power_supply/battery/batt_lp_charging ; then
+  /sbin/busybox echo 1 > /proc/sys/kernel/rom_feature_set
+  /sbin/busybox mv -f /res/misc/init.cm11.0/* /
+  /sbin/busybox chmod 755 /innt
+  /sbin/busybox chmod 644 /*.samsunggolden*
+  /sbin/busybox chmod 644 /*.rc
+  /sbin/busybox chmod 644 /*.prop
+  exec /sbin/lpm
+fi
 
-# Galaxy S3 mini block device
+# Galaxy S3 Mini block device
 # Don't use /dev/block/platform/*/by-name/* symlink!
 SYSTEMDEV="/dev/block/mmcblk0p22"
-DATADEV="/dev/block/mmcblk0p25"
 CACHEDEV="/dev/block/mmcblk0p23"
+DATADEV="/dev/block/mmcblk0p25"
 
 # Normal boot
 /sbin/busybox rm -f /sbin/lpm
 /sbin/busybox mkdir -p /dev/block
-/sbin/busybox mknod $CACHEDEV b 179 23; # /cache
 /sbin/busybox mknod $SYSTEMDEV b 179 22; # /system
+/sbin/busybox mknod $CACHEDEV b 179 23; # /cache
 /sbin/busybox mknod $DATADEV b 179 25; # /data
 /sbin/busybox mknod /dev/block/loop0 b 7 0
 

@@ -4,13 +4,14 @@
 import /init.samsunggolden.usb.rc
 
 on init
+
     mkdir /mnt/shell/emulated 0700 shell shell
     mkdir /storage/emulated 0555 root root
-    mkdir /storage/sdcard1 0700 root root
+
     mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
+    mkdir /storage/sdcard1 0700 root root
 
     export EXTERNAL_STORAGE /storage/emulated/legacy
-    export SECONDARY_STORAGE /storage/sdcard1
     export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
     export EMULATED_STORAGE_TARGET /storage/emulated
     export SECONDARY_STORAGE /storage/sdcard1
@@ -22,9 +23,6 @@ on init
     symlink /mnt/shell/emulated/0 /storage/emulated/legacy
     symlink /storage/sdcard1 /extSdCard
     symlink /storage/sdcard1 /mnt/extSdCard
-
-    # Preload libjhead for camera
-    export LD_PRELOAD /system/lib/libjhead.so
 
     mkdir /modemfs 0771 system system
     mkdir /efs 0775 radio system
@@ -54,7 +52,7 @@ on fs
     # blackhawk: bind mount 2nd ROM's data to /data
     exec /sbin/ext/db-bindmount.sh
 
-    # blackhawk: mount /system as ext4
+    # blackhawk: mount /system as ext4 filesystem
     mount ext4 loop@/.secondrom/media/.secondrom/system.img /system rw noatime nodiratime wait
 
     # blackhawk: link /system/lib/modules to /lib/modules
@@ -62,6 +60,10 @@ on fs
 
     setprop ro.crypto.fuse_sdcard true
     start cspsa
+
+    # blackhawk: busybox permissions for ordinary users
+    chmod 0755 /sbin
+    chmod 0755 /sbin/busybox
 
 on post-fs
     chown radio radio /modemfs
@@ -443,14 +445,9 @@ on boot
     class_start modem
     class_start default
 
-    # blackhawk: busybox permissions for ordinary users
-    chmod 0755 /sbin
-    chmod 0755 /sbin/busybox
-
 # Create virtual SD card at /mnt/sdcard, based on the /data/media directory
 # daemon will drop to user/group system/media_rw after initializing
 # underlying files in /data/media wil be created with user and group media_rw (1023)
-# service sdcard /system/bin/sdcard -u 1023 -g 1023 -l /data/media /mnt/shell/emulated
 # blackhawk: create virtual SD card at /mnt/sdcard, based on the /.secondrom/media directory
 service sdcard /system/bin/sdcard -u 1023 -g 1023 -l /.secondrom/media /mnt/shell/emulated
     class late_start
@@ -552,13 +549,3 @@ service iprenew_bt-pan /system/bin/dhcpcd -n
 	class main
 	disabled
 	oneshot
-
-# blackhawk: Chainfire's system patch
-on boot
-    start cfpatch
-    write /data/sync_fifo sync
-
-service cfpatch /sbin/boot-patch.sh
-    user root
-    disabled
-    oneshot

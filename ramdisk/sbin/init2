@@ -1,6 +1,6 @@
 #!/sbin/busybox sh
 
-# Ketut P. Kumajaya, Apr 2013, Nov 2013, Mar 2014
+# Ketut P. Kumajaya, Apr 2013, Nov 2013, Mar 2014, Aug 2014
 # based on gokhanmoral's ramfs for SGS3
 # Do not remove above credits header!
 
@@ -14,23 +14,23 @@
 
 DEFAULTROM=`/sbin/busybox cat /.secondrom/media/.defaultrom`
 
-# Galaxy S3 mini block device
+# Galaxy S3 Mini block device
 # Don't use /dev/block/platform/*/by-name/* symlink!
 SYSTEMDEV="/dev/block/mmcblk0p22"
-DATADEV="/dev/block/mmcblk0p25"
 
 if /sbin/busybox [ "$DEFAULTROM" == "1" ]; then
+  SYSTEMDEV="/.secondrom/media/.secondrom/system.img"
   if /sbin/busybox [ ! -f /.secondrom/media/.secondrom/data/.layout_version ]; then
     /sbin/busybox mkdir -p /.secondrom/media/.secondrom/data
     /sbin/busybox echo -n 2 > /.secondrom/media/.secondrom/data/.layout_version
   fi
-  /sbin/busybox mount -t ext4 /.secondrom/media/.secondrom/system.img /system
 else
   if /sbin/busybox [ ! -f /.secondrom/.layout_version ]; then
     /sbin/busybox echo -n 2 > /.secondrom/.layout_version
   fi
-  /sbin/busybox mount -t ext4 $SYSTEMDEV /system
 fi
+
+/sbin/busybox mount -t ext4 $SYSTEMDEV /system
 
 /sbin/busybox mkdir -p /.secondrom/media/0
 
@@ -39,17 +39,12 @@ CM110=0
 /sbin/busybox [ -f /system/priv-app/Settings.apk ] && CM110=1
 
 if /sbin/busybox [ "$CM110" == 1 ]; then
+  /sbin/busybox echo 1 > /proc/sys/kernel/rom_feature_set
   /sbin/busybox mv -f /res/misc/init.cm11.0/* /
-  /sbin/busybox mv -f /res/misc/init.cm11.0/sbin/* /sbin/
-  /sbin/busybox mv -f /res/misc/init.cm11.0/sbin/boot/* /sbin/boot/
-#else
-#  /sbin/busybox mv -f /res/misc/init.41/* /
-#  /sbin/busybox mv -f /res/misc/init.41/sbin/* /sbin/
-#  /sbin/busybox mv -f /res/misc/init.41/sbin/boot/* /sbin/boot/
-#  /sbin/busybox chmod 755 /sbin/bootanimation.sh
-#  /sbin/busybox chmod 755 /sbin/sdcard
+else
+  /sbin/busybox echo 0 > /proc/sys/kernel/rom_feature_set
+  /sbin/busybox mv -f /res/misc/init.41/* /
 fi
-
 
 if /sbin/busybox [ "$DEFAULTROM" == "1" ]; then
   /sbin/busybox mv -f /init.samsunggolden.rc.2 /init.samsunggolden.rc
@@ -67,7 +62,6 @@ fi
 /sbin/busybox chmod 644 /*.rc
 /sbin/busybox chmod 644 /*.prop
 /sbin/busybox chmod -R 755 /lib
-/sbin/busybox chmod 755 /sbin/boot-patch.sh
 /sbin/busybox chmod 755 /sbin/ext/db-bindmount.sh
 /sbin/busybox chmod 755 /sbin/ext/modules.sh
 
