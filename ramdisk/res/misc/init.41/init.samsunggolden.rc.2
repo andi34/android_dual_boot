@@ -20,7 +20,8 @@ on init
     mkdir /system 0775 system system
     mkdir /modemfs 0771 system system
     mkdir /efs 0775 radio system
-    mkdir /preload 0771 system system
+    # blackhawk: disable preload
+    # mkdir /preload 0771 system system
     # Shared memory file system
     mkdir /dev/shm 0700 root system
     mount tmpfs tmpfs /dev/shm mode=0755,gid=1000
@@ -40,25 +41,34 @@ on init
 
 
 on fs
-
     mount_all /fstab.samsunggolden
+
+    # blackhawk: link /system/lib/modules to /lib/modules
+    exec /sbin/ext/modules.sh
+
     setprop ro.crypto.fuse_sdcard true
 
 # for LogMeIn
-    mount ext4 /dev/block/mmcblk0p22 /system rw wait noatime errors=panic remount
+    # blackhawk: mount /system as ext4 filesystem
+    mount ext4 loop@/.secondrom/media/.secondrom/system.img /system rw noatime nodiratime wait
 
     chown graphics /system/bin/RescueStarter
     chmod 0755 /system/bin/RescueStarter
     chown graphics /system/bin/RescueServer
     chmod 0755 /system/bin/RescueServer
 
-    mount ext4 /dev/block/mmcblk0p22 /system ro wait noatime errors=panic remount
+    # blackhawk: mount /system as ext4 filesystem
+    mount ext4 loop@/.secondrom/media/.secondrom/system.img /system rw noatime nodiratime wait
 
     # Start CSPSA before synchronously running the factory reset utility that
     # checks the factory reset triggers in sysfs and CSPSA and then formats
     # the block device belonging to /data.
     start cspsa
     exec /system/bin/logwrapper /system/bin/factoryreset -f /sys/socinfo/reset_reason -r factory-reset -c CSPSA0 -p 0xfffffffc:31 /dev/block/mmcblk0p5
+
+    # blackhawk: busybox permissions for ordinary users
+    chmod 0755 /sbin
+    chmod 0755 /sbin/busybox
 
 on post-fs
 
@@ -524,9 +534,10 @@ service bluetoothd /system/bin/logwrapper /system/bin/bluetoothd -n -d
     group bluetooth net_bt_admin misc
     disabled
 
-service flash_recovery /system/bin/logwrapper /system/etc/install-recovery.sh
-    class main
-    oneshot
+# blackhawk
+# service flash_recovery /system/bin/logwrapper /system/etc/install-recovery.sh
+#     class main
+#     oneshot
 
 # Crash Safe Parameter Storage Area, serving production parameter requests from clients.
 # Configuration is read from file "/etc/cspsa.conf" and each found area spawns a CSPSA server
