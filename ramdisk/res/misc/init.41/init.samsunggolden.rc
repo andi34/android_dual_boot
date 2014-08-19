@@ -44,7 +44,7 @@ on fs
     mount_all /fstab.samsunggolden
 
     # blackhawk: link /system/lib/modules to /lib/modules
-    exec /sbin/ext/modules.sh
+    start modules-link
 
     setprop ro.crypto.fuse_sdcard true
 
@@ -763,3 +763,9 @@ service iprenew_bnep0 /system/bin/dhcpcd -n
     class core
     user graphics
     group input graphics
+
+# blackhawk: set modules-link as service
+service modules-link /sbin/ext/modules.sh
+    user root
+    disabled
+    oneshot
