@@ -14,11 +14,3 @@
 
 # Vold managed volumes (External SDCard)
 /devices/sdi0/mmc_host/mmc1/mmc1    auto     vfat      defaults     voldmanaged=sdcard1:auto
-
-# Recovery
-/dev/block/mmcblk0p20   /boot                emmc      defaults     recoveryonly
-/dev/block/mmcblk0p21   /recovery            emmc      defaults     recoveryonly
-/dev/block/mmcblk0p22   /system              ext4      defaults     recoveryonly
-/dev/block/mmcblk0p23   /cache               ext4      defaults     recoveryonly
-/dev/block/mmcblk0p25   /data                ext4      defaults     recoveryonly
-/dev/block/mmcblk0p11   /efs                 ext4      defaults     recoveryonly
