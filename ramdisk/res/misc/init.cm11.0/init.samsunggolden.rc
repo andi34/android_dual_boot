@@ -50,6 +50,10 @@ on init
     # Prevents permission denied error for telephony
     chmod 0644 /proc/cmdline
 
+    # blackhawk: set SELinux to permissive for now
+    setenforce 0
+    setprop ro.boot.selinux 0
+
 on fs
     mount_all /fstab.samsunggolden
 
