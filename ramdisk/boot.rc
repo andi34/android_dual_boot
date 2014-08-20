@@ -4,7 +4,9 @@
 on early-init
     start ueventd
     start killer
+    write /sys/devices/platform/mcde_fb/graphics/fb0/bits_per_pixel 16
     exec /sbin/bootmenu.sh
+    write /sys/devices/platform/mcde_fb/graphics/fb0/bits_per_pixel 32
     stop ueventd
     exec /sbin/init2
 
