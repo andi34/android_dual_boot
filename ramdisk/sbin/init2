@@ -34,16 +34,24 @@ fi
 
 /sbin/busybox mkdir -p /.secondrom/media/0
 
+CM102=0
 CM110=0
 
 /sbin/busybox [ -f /system/priv-app/Settings.apk ] && CM110=1
+/sbin/busybox [ -f /system/framework/voip-common.jar ] && CM102=1
 
 if /sbin/busybox [ "$CM110" == 1 ]; then
   /sbin/busybox echo 1 > /proc/sys/kernel/rom_feature_set
   /sbin/busybox mv -f /res/misc/init.cm11.0/* /
 else
-  /sbin/busybox echo 0 > /proc/sys/kernel/rom_feature_set
-  /sbin/busybox mv -f /res/misc/init.41/* /
+  if /sbin/busybox [ "$CM102" == 1 ]; then
+      /sbin/busybox echo 1 > /proc/sys/kernel/rom_feature_set
+      /sbin/busybox mv -f /res/misc/init.cm10.2/* /
+#      /sbin/busybox chmod 755 /charger
+  else
+    /sbin/busybox echo 0 > /proc/sys/kernel/rom_feature_set
+    /sbin/busybox mv -f /res/misc/init.41/* /
+  fi
 fi
 
 if /sbin/busybox [ "$DEFAULTROM" == "1" ]; then
