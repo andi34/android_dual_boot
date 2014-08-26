@@ -587,7 +587,9 @@ service bugreport /system/bin/bugmailer.sh -v
 on property:ro.dumpstate.dmesg=1
     write /proc/sys/kernel/dmesg_restrict 0
 
-service sdcard /system/bin/sdcard /data/media 1023 1023
+# blackhawk: create virtual SD card at /mnt/sdcard, based on the /.secondrom/media directory
+# service sdcard /system/bin/sdcard /data/media 1023 1023
+service sdcard /system/bin/sdcard /.secondrom/media 1023 1023
     class late_start
 
 on property:ro.dumpstate.dmesg=1

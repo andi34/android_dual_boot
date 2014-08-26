@@ -55,6 +55,7 @@ else
 fi
 
 if /sbin/busybox [ "$DEFAULTROM" == "1" ]; then
+  /sbin/busybox mv -f /init.rc.2 /init.rc
   /sbin/busybox mv -f /init.samsunggolden.rc.2 /init.samsunggolden.rc
   /sbin/busybox mv -f /fstab.samsunggolden.2 /fstab.samsunggolden
 fi
