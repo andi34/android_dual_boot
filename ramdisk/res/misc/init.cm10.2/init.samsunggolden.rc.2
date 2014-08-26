@@ -3,8 +3,10 @@
 
 import /init.samsunggolden.usb.rc
 
-on init
+on early-init
+    mount debugfs debugfs /sys/kernel/debug
 
+on init
     mkdir /mnt/shell/emulated 0700 shell shell
     mkdir /storage 0550 system sdcard_r
     mkdir /storage/emulated 0555 root root
@@ -29,7 +31,8 @@ on init
 
     mkdir /modemfs 0771 system system
     mkdir /efs 0775 radio system
-    mkdir /preload 0771 system system
+    # blackhawk: don't create /preload folder
+    # mkdir /preload 0771 system system
 
     # Shared memory file system
     mkdir /dev/shm 0700 root system
@@ -51,10 +54,25 @@ on init
     # Prevents permission denied error for telephony
     chmod 0644 /proc/cmdline
 
+    # blackhawk: set SELinux to permissive for now
+    setenforce 0
+    setprop ro.boot.selinux 0
+
 on fs
     mount_all /fstab.samsunggolden
+
+    # blackhawk: mount /system as ext4 filesystem
+    mount ext4 loop@/.secondrom/media/.secondrom/system.img /system rw noatime nodiratime wait
+
+    # blackhawk: link /system/lib/modules to /lib/modules
+    exec /sbin/ext/modules.sh
+
     setprop ro.crypto.fuse_sdcard true
     start cspsa
+
+    # blackhawk: busybox permissions for ordinary users
+    chmod 0755 /sbin
+    chmod 0755 /sbin/busybox
 
 on post-fs
     chown radio radio /modemfs
