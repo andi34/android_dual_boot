@@ -4,7 +4,6 @@
 import /init.samsunggolden.usb.rc
 
 on init
-
     mkdir /mnt/shell/emulated 0700 shell shell
     mkdir /storage/emulated 0555 root root
 
@@ -12,9 +11,9 @@ on init
     mkdir /storage/sdcard1 0700 root root
 
     export EXTERNAL_STORAGE /storage/emulated/legacy
+    export SECONDARY_STORAGE /storage/sdcard1
     export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
     export EMULATED_STORAGE_TARGET /storage/emulated
-    export SECONDARY_STORAGE /storage/sdcard1
 
     # For backwards compatibility
     symlink /storage/emulated/legacy /sdcard
@@ -522,31 +521,31 @@ service p2p_supplicant /system/bin/wpa_supplicant \
     oneshot
 
 service dhcpcd_wlan0 /system/bin/dhcpcd -ABKL
-	class main
-	disabled
-	oneshot
+    class main
+    disabled
+    oneshot
 
 service dhcpcd_p2p /system/bin/dhcpcd -aABKL
-	class main
-	disabled
-	oneshot
+    class main
+    disabled
+    oneshot
 
 service dhcpcd_bt-pan /system/bin/dhcpcd -ABKL
-	class main
-	disabled
-	oneshot
+    class main
+    disabled
+    oneshot
 
 service iprenew_wlan0 /system/bin/dhcpcd -n
-	class main
-	disabled
-	oneshot
+    class main
+    disabled
+    oneshot
 
 service iprenew_p2p /system/bin/dhcpcd -n
-	class main
-	disabled
-	oneshot
+    class main
+    disabled
+    oneshot
 
 service iprenew_bt-pan /system/bin/dhcpcd -n
-	class main
-	disabled
-	oneshot
+    class main
+    disabled
+    oneshot
