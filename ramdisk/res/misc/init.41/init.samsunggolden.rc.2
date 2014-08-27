@@ -5,10 +5,12 @@ import /init.${ro.hardware}.usb.rc
 import /init.bt.rc
 
 on early-init
+
     # Set init and its forked children's oom_adj.
     write /proc/1/oom_score_adj -16
 
 on init
+
     # setup the global environment
     export PATH /system/sbin:/system/bin:/system/xbin:/sbin:/bin:/vendor/bin
     export LD_LIBRARY_PATH /system/lib:/lib:/usr/lib:/system/lib/ste_omxcomponents/:/vendor/lib
@@ -39,6 +41,7 @@ on init
 
 
 on fs
+
     mount_all /fstab.samsunggolden
 
     # blackhawk: bind mount 2nd ROM's data to /data
@@ -53,15 +56,17 @@ on fs
     setprop ro.crypto.fuse_sdcard true
 
 # for LogMeIn
-    # blackhawk: disabled
-    # mount ext4 /dev/block/mmcblk0p22 /system rw noatime nodiratime wait
+    # blackhawk: disable LogMeIn
+    # blackhawk: mount /system as ext4 filesystem
+    # mount ext4 loop@/.secondrom/media/.secondrom/system.img /system rw wait noatime nodiratime remount
 
     # chown graphics /system/bin/RescueStarter
     # chmod 0755 /system/bin/RescueStarter
     # chown graphics /system/bin/RescueServer
     # chmod 0755 /system/bin/RescueServer
 
-    # mount ext4 /dev/block/mmcblk0p22 /system rw noatime nodiratime wait
+    # blackhawk: mount /system as ext4 filesystem
+    # mount ext4 loop@/.secondrom/media/.secondrom/system.img /system ro wait noatime nodiratime remount
 
     # Start CSPSA before synchronously running the factory reset utility that
     # checks the factory reset triggers in sysfs and CSPSA and then formats
@@ -74,6 +79,7 @@ on fs
     chmod 0755 /sbin/busybox
 
 on post-fs
+
     # once everything is setup, no need to modify /
     chown system system /system
     chmod 0775 /system
@@ -536,7 +542,6 @@ service bluetoothd /system/bin/logwrapper /system/bin/bluetoothd -n -d
     group bluetooth net_bt_admin misc
     disabled
 
-
 # blackhawk
 # service flash_recovery /system/bin/logwrapper /system/etc/install-recovery.sh
 #     class main
@@ -761,20 +766,20 @@ service iprenew_bnep0 /system/bin/dhcpcd -n
 	oneshot
 
 # for LogMeIn
-    # blackhawk: disabled
-    # service RescueStarter /system/bin/RescueStarter
-    # class core
-    # user graphics
-    # group input graphics
+# blackhawk: disable LogMeIn
+# service RescueStarter /system/bin/RescueStarter
+#     class core
+#     user graphics
+#     group input graphics
 
-# blackhawk: set modules-link as service
-service modules-link /sbin/ext/modules.sh
+# blackhawk: set db-bindmount as a service since "exec" not working on stock init
+service db-bindmount /sbin/ext/db-bindmount.sh
     user root
     disabled
     oneshot
 
-# blackhawk: set db-bindmount as a service since "exec" not working on stock init
-service db-bindmount /sbin/ext/db-bindmount.sh
+# blackhawk: set modules-link as service
+service modules-link /sbin/ext/modules.sh
     user root
     disabled
     oneshot

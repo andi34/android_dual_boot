@@ -60,7 +60,7 @@ if /sbin/busybox [ "$DEFAULTROM" == "1" ]; then
   /sbin/busybox mv -f /fstab.samsunggolden.2 /fstab.samsunggolden
 fi
 
-/sbin/busybox rm -f /init.samsunggolden.rc.2 /fstab.samsunggolden.2
+/sbin/busybox rm -f /init.rc.2 /init.samsunggolden.rc.2 /fstab.samsunggolden.2
 
 /sbin/busybox umount -d -f /system
 /sbin/busybox umount -f /.secondrom
