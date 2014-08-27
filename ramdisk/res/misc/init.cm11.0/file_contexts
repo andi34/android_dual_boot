@@ -177,8 +177,8 @@
 /data/local/tmp(/.*)?	u:object_r:shell_data_file:s0
 /data/local/tmp/selinux(/.*)?   u:object_r:tombstone_data_file:s0
 # Misc data
-/data/misc/bluetoothd(/.*)?	u:object_r:bluetoothd_data_file:s0
 /data/misc/audio(/.*)?          u:object_r:audio_data_file:s0
+/data/misc/bluetoothd(/.*)?	u:object_r:bluetoothd_data_file:s0
 /data/misc/bluetooth(/.*)?	u:object_r:bluetooth_data_file:s0
 /data/misc/bluedroid(/.*)?	u:object_r:bluetooth_data_file:s0
 /data/misc/keystore(/.*)?	u:object_r:keystore_data_file:s0
@@ -194,6 +194,8 @@
 /data/data/com.android.settings/files/wallpaper	u:object_r:wallpaper_file:s0
 # Wallpaper file for other users
 /data/system/users/[0-9]+/wallpaper		u:object_r:wallpaper_file:s0
+# Downloaded files
+/data/data/com.android.providers.downloads/cache u:object_r:download_file:s0
 #############################
 # efs files
 #
@@ -213,7 +215,7 @@
 /sys/devices/platform/nfc-power/nfc_power -- u:object_r:sysfs_nfc_power_writable:s0
 /sys/class/rfkill/rfkill[0-9]*/state -- u:object_r:sysfs_bluetooth_writable:s0
 /sys/class/rfkill/rfkill[0-9]*/type -- u:object_r:sysfs_bluetooth_writable:s0
-/sys/devices/system/cpu(/.*)?    u:object_r:sysfs_devices_system_cpu:s0
+/sys/devices/system/cpu(/.*)? u:object_r:sysfs_devices_system_cpu:s0
 /sys/power/wake_lock -- u:object_r:sysfs_wake_lock:s0
 /sys/power/wake_unlock -- u:object_r:sysfs_wake_lock:s0
 #############################
@@ -223,13 +225,19 @@
 /mnt/asec/[^/]+/lib(/.*)? u:object_r:asec_public_file:s0
 /data/app-asec(/.*)?      u:object_r:asec_image_file:s0
 #line 1 "vendor/cm/sepolicy/file_contexts"
+#line 1 "vendor/omni/sepolicy/file_contexts"
+###########################
+# Common sepolicy
+#
+
+# cache
 /cache/dalvik-cache(/.*)? u:object_r:dalvikcache_data_file:s0
 
-#############################
-# performance-related sysfs files (CM)
+# performance-related sysfs files
 /sys/kernel/mm/ksm(/.*)?       --          u:object_r:sysfs_writable:s0
 /sys/devices/system/cpu.*/cpufreq(/.*)? --  u:object_r:sysfs_devices_system_cpu:s0
 /sys/block/mmcblk0/queue/scheduler  --    u:object_r:sysfs_writable:s0
 
-/data/hostapd(/.*)?         u:object_r:wifi_data_file:s0
-/data/misc/radio(/.*)?      u:object_r:radio_data_file:s0
+/data/hostapd(/.*)?       u:object_r:wifi_data_file:s0
+/data/misc/radio(/.*)?    u:object_r:radio_data_file:s0
+

@@ -11,3 +11,4 @@ user=_app seinfo=release domain=release_app type=app_data_file
 user=_isolated domain=isolated_app
 user=shell domain=shell type=shell_data_file
 user=theme_man domain=system_app type=system_data_file
+
