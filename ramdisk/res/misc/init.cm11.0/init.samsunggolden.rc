@@ -286,6 +286,10 @@ on post-fs
     # AB8500 Fuelgauge initialization using PARAM capacity
     write /sys/class/power_supply/sec-fuelgauge/reinit_cap 1
 
+    # exFAT filesystem support
+    insmod /system/lib/modules/exfat_core.ko
+    insmod /system/lib/modules/exfat_fs.ko
+
 on post-fs-data
     mkdir /data/media 0770 media_rw media_rw
     

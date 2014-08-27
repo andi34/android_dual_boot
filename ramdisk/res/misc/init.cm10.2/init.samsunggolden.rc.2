@@ -292,6 +292,10 @@ on post-fs
     # AB8500 Fuelgauge initialization using PARAM capacity
     write /sys/class/power_supply/sec-fuelgauge/reinit_cap 1
 
+    # exFAT filesystem support
+    insmod /system/lib/modules/exfat_core.ko
+    insmod /system/lib/modules/exfat_fs.ko
+
     # Make Torch working
     chmod 0777 /sys/class/sec/flash/enable
 
