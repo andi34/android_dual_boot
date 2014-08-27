@@ -1,0 +1,72 @@
+#!/sbin/busybox sh
+
+# Ketut P. Kumajaya, Apr 2013, Nov 2013, Mar 2014, Aug 2014
+# based on gokhanmoral's ramfs for SGS3
+# Do not remove above credits header!
+
+/sbin/busybox rm -f /sbin/ueventd
+/sbin/busybox ln -s ../init /sbin/ueventd
+
+/sbin/busybox rm -f /sbin/aroma
+/sbin/busybox rm -f /res/misc/bootmenu.zip
+/sbin/busybox rm -f /sbin/bootmenu.sh
+/sbin/busybox rm -f /sbin/killer.sh
+
+DEFAULTROM=`/sbin/busybox cat /.secondrom/media/.defaultrom`
+
+# Galaxy S3 Mini block device
+# Don't use /dev/block/platform/*/by-name/* symlink!
+SYSTEMDEV="/dev/block/mmcblk0p22"
+
+if /sbin/busybox [ "$DEFAULTROM" == "1" ]; then
+  SYSTEMDEV="/.secondrom/media/.secondrom/system.img"
+  if /sbin/busybox [ ! -f /.secondrom/media/.secondrom/data/.layout_version ]; then
+    /sbin/busybox mkdir -p /.secondrom/media/.secondrom/data
+    /sbin/busybox echo -n 2 > /.secondrom/media/.secondrom/data/.layout_version
+  fi
+else
+  if /sbin/busybox [ ! -f /.secondrom/.layout_version ]; then
+    /sbin/busybox echo -n 2 > /.secondrom/.layout_version
+  fi
+fi
+
+/sbin/busybox mount -t ext4 $SYSTEMDEV /system
+
+/sbin/busybox mkdir -p /.secondrom/media/0
+
+CM110=0
+
+/sbin/busybox [ -f /system/priv-app/Settings.apk ] && CM110=1
+
+if /sbin/busybox [ "$CM110" == 1 ]; then
+  /sbin/busybox echo 1 > /proc/sys/kernel/rom_feature_set
+  /sbin/busybox mv -f /res/misc/init.cm11.0/* /
+else
+  /sbin/busybox echo 0 > /proc/sys/kernel/rom_feature_set
+  /sbin/busybox mv -f /res/misc/init.41/* /
+fi
+
+if /sbin/busybox [ "$DEFAULTROM" == "1" ]; then
+  /sbin/busybox mv -f /init.samsunggolden.rc.2 /init.samsunggolden.rc
+  /sbin/busybox mv -f /fstab.samsunggolden.2 /fstab.samsunggolden
+fi
+
+/sbin/busybox rm -f /init.samsunggolden.rc.2 /fstab.samsunggolden.2
+
+/sbin/busybox umount -d -f /system
+/sbin/busybox umount -f /.secondrom
+/sbin/busybox umount -f /dev/pts
+
+/sbin/busybox chmod 755 /innt
+/sbin/busybox chmod 644 /*.samsunggolden*
+/sbin/busybox chmod 644 /*.rc
+/sbin/busybox chmod 644 /*.prop
+/sbin/busybox chmod -R 755 /lib
+/sbin/busybox chmod 755 /sbin/ext/db-bindmount.sh
+/sbin/busybox chmod 755 /sbin/ext/modules.sh
+
+/sbin/busybox rm -rf /res/misc/init*
+
+/sbin/busybox mv /innt /init
+cd /
+exec /init
