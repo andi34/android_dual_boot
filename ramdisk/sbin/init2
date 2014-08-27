@@ -47,7 +47,6 @@ else
   if /sbin/busybox [ "$CM102" == 1 ]; then
       /sbin/busybox echo 1 > /proc/sys/kernel/rom_feature_set
       /sbin/busybox mv -f /res/misc/init.cm10.2/* /
-#      /sbin/busybox chmod 755 /charger
   else
     /sbin/busybox echo 0 > /proc/sys/kernel/rom_feature_set
     /sbin/busybox mv -f /res/misc/init.41/* /
@@ -60,7 +59,7 @@ if /sbin/busybox [ "$DEFAULTROM" == "1" ]; then
   /sbin/busybox mv -f /fstab.samsunggolden.2 /fstab.samsunggolden
 fi
 
-/sbin/busybox rm -f /init.rc.2/init.samsunggolden.rc.2 /fstab.samsunggolden.2
+/sbin/busybox rm -f /init.rc.2 /init.samsunggolden.rc.2 /fstab.samsunggolden.2
 
 /sbin/busybox umount -d -f /system
 /sbin/busybox umount -f /.secondrom
