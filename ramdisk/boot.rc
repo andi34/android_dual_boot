@@ -1,0 +1,19 @@
+# Ketut P. Kumajaya, May 2013, Mar 2014
+# Do not remove above credits header!
+
+on early-init
+    start ueventd
+    start killer
+    write /sys/devices/platform/mcde_fb/graphics/fb0/bits_per_pixel 16
+    exec /sbin/bootmenu.sh
+    write /sys/devices/platform/mcde_fb/graphics/fb0/bits_per_pixel 32
+    stop ueventd
+    exec /sbin/init2
+
+service ueventd /sbin/ueventd
+    critical
+
+service killer /sbin/killer.sh
+    user root
+    disabled
+    oneshot
