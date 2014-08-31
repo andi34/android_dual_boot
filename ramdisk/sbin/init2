@@ -44,8 +44,13 @@ if /sbin/busybox [ "$CM110" == 1 ]; then
   /sbin/busybox echo 1 > /proc/sys/kernel/rom_feature_set
   /sbin/busybox mv -f /res/misc/init.cm11.0/* /
 else
-  /sbin/busybox echo 0 > /proc/sys/kernel/rom_feature_set
-  /sbin/busybox mv -f /res/misc/init.41/* /
+  if /sbin/busybox [ "$CM102" == 1 ]; then
+      /sbin/busybox echo 1 > /proc/sys/kernel/rom_feature_set
+      /sbin/busybox mv -f /res/misc/init.cm10.2/* /
+  else
+    /sbin/busybox echo 0 > /proc/sys/kernel/rom_feature_set
+    /sbin/busybox mv -f /res/misc/init.41/* /
+  fi
 fi
 
 if /sbin/busybox [ "$DEFAULTROM" == "1" ]; then
