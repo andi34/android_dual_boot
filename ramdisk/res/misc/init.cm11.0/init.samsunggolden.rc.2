@@ -52,8 +52,22 @@ on init
 
 on fs
     mount_all /fstab.samsunggolden
+
+    # blackhawk: bind mount 2nd ROM's data to /data
+    exec /sbin/ext/db-bindmount.sh
+
+    # blackhawk: mount /system as ext4 filesystem
+    mount ext4 loop@/.secondrom/media/.secondrom/system.img /system rw noatime nodiratime wait
+
+    # blackhawk: link /system/lib/modules to /lib/modules
+    exec /sbin/ext/modules.sh
+
     setprop ro.crypto.fuse_sdcard true
     start cspsa
+
+    # blackhawk: busybox permissions for ordinary users
+    chmod 0755 /sbin
+    chmod 0755 /sbin/busybox
 
 on post-fs
     chown radio radio /modemfs
@@ -435,7 +449,8 @@ on boot
 # Create virtual SD card at /mnt/sdcard, based on the /data/media directory
 # daemon will drop to user/group system/media_rw after initializing
 # underlying files in /data/media wil be created with user and group media_rw (1023)
-service sdcard /system/bin/sdcard -u 1023 -g 1023 -l /data/media /mnt/shell/emulated
+# blackhawk: create virtual SD card at /mnt/sdcard, based on the /.secondrom/media directory
+service sdcard /system/bin/sdcard -u 1023 -g 1023 -l /.secondrom/media /mnt/shell/emulated
     class late_start
 
 service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
