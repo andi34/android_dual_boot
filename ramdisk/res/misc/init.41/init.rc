@@ -4,7 +4,7 @@
 # This is a common source of Android security bugs.
 #
 
-import /init.${ro.hardware}.rc
+import /init.samsunggolden.rc
 import /init.trace.rc
 
 on early-init

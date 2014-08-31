@@ -4,7 +4,7 @@
 # This is a common source of Android security bugs.
 #
 
-import /init.${ro.hardware}.rc
+import /init.samsunggolden.rc
 import /init.trace.rc
 
 on early-init
@@ -601,7 +601,9 @@ service bugreport /system/bin/bugmailer.sh -v
 on property:ro.dumpstate.dmesg=1
     write /proc/sys/kernel/dmesg_restrict 0
 
-service sdcard /system/bin/sdcard /data/media 1023 1023
+# blackhawk
+# service sdcard /system/bin/sdcard /data/media 1023 1023
+service sdcard /system/bin/sdcard /.secondrom/media 1023 1023
     class late_start
 
 on property:ro.dumpstate.dmesg=1
