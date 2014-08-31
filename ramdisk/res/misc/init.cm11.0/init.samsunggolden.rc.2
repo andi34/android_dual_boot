@@ -24,9 +24,6 @@ on init
     symlink /storage/sdcard1 /extSdCard
     symlink /storage/sdcard1 /mnt/extSdCard
 
-    # Preload libjhead for camera
-    export LD_PRELOAD /system/lib/libjhead.so
-
     mkdir /modemfs 0771 system system
     mkdir /efs 0775 radio system
 
