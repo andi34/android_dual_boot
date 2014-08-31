@@ -1,0 +1,8 @@
+#!/system/bin/sh
+
+# Ketut P. Kumajaya, Nov 2013, Mar 2014
+# Do not remove above credits header!
+
+# -- XBox 360 USB Controller
+# insmod /lib/modules/xpad.ko
+# insmod /lib/modules/joydev.ko
