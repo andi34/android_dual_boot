@@ -54,6 +54,8 @@ else
   else
     /sbin/busybox echo 0 > /proc/sys/kernel/rom_feature_set
     /sbin/busybox mv -f /res/misc/init.41/* /
+    /sbin/busybox mv -f /res/misc/init.41/sbin/* /sbin/
+    /sbin/busybox mv -f /res/misc/init.41/sbin/boot/* /sbin/boot/
   fi
 fi
 

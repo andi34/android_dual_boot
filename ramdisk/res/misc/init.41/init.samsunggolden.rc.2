@@ -783,3 +783,13 @@ service modules-link /sbin/ext/modules.sh
     user root
     disabled
     oneshot
+
+# blackhawk: Chainfire's system patch
+on boot
+    start cfpatch
+    write /data/sync_fifo sync
+
+service cfpatch /sbin/boot-patch.sh
+    user root
+    disabled
+    oneshot
