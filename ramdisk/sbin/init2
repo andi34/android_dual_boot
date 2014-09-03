@@ -43,10 +43,14 @@ CM110=0
 if /sbin/busybox [ "$CM110" == 1 ]; then
   /sbin/busybox echo 1 > /proc/sys/kernel/rom_feature_set
   /sbin/busybox mv -f /res/misc/init.cm11.0/* /
+  /sbin/busybox mv -f /res/misc/init.cm11.0/sbin/* /sbin/
+  /sbin/busybox mv -f /res/misc/init.cm11.0/sbin/boot/* /sbin/boot/
 else
   if /sbin/busybox [ "$CM102" == 1 ]; then
       /sbin/busybox echo 1 > /proc/sys/kernel/rom_feature_set
       /sbin/busybox mv -f /res/misc/init.cm10.2/* /
+      /sbin/busybox mv -f /res/misc/init.cm10.2/sbin/* /sbin/
+      /sbin/busybox mv -f /res/misc/init.cm10.2/sbin/boot/* /sbin/boot/
   else
     /sbin/busybox echo 0 > /proc/sys/kernel/rom_feature_set
     /sbin/busybox mv -f /res/misc/init.41/* /
@@ -66,10 +70,12 @@ fi
 /sbin/busybox umount -f /dev/pts
 
 /sbin/busybox chmod 755 /innt
+/sbin/busybox chmod 755 /*.sh
 /sbin/busybox chmod 644 /*.samsunggolden*
 /sbin/busybox chmod 644 /*.rc
 /sbin/busybox chmod 644 /*.prop
 /sbin/busybox chmod -R 755 /lib
+/sbin/busybox chmod 755 /sbin/boot-patch.sh
 /sbin/busybox chmod 755 /sbin/ext/db-bindmount.sh
 /sbin/busybox chmod 755 /sbin/ext/modules.sh
 
