@@ -54,6 +54,9 @@ on init
 on fs
     mount_all /fstab.samsunggolden
 
+    # blackhawk: bind mount 2nd ROM's data to /data
+    exec /sbin/ext/db-bindmount.sh
+
     # blackhawk: mount /system as ext4 filesystem
     mount ext4 loop@/.secondrom/media/.secondrom/system.img /system rw noatime nodiratime wait
 
