@@ -420,6 +420,7 @@ service TvoutService_C /system/bin/bintvoutservice
     class main
     user system
     group system
+    disabled
 
 # Keyboard
 service dock_kbd_attach /system/bin/dock_kbd_attach /dev/ttyO3
