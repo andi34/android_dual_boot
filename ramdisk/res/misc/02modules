@@ -1,0 +1,24 @@
+#!/system/bin/sh
+
+# Ketut P. Kumajaya, Sept 2013, Apr 2014
+
+# -- CIFS filesystem
+# insmod /system/lib/modules/cifs.ko
+
+# -- USB GSM & CDMA modem, P31xx need powered USB hub
+# insmod /system/lib/modules/ppp_async.ko
+# insmod /system/lib/modules/usb_wwan.ko
+# insmod /system/lib/modules/option.ko
+
+# -- FTDI serial converter
+# insmod /system/lib/modules/ftdi_sio.ko
+
+# -- Android logger
+# insmod /system/lib/modules/logger.ko
+
+# -- XBox 360 USB Controller
+# insmod /system/lib/modules/xpad.ko
+# insmod /system/lib/modules/joydev.ko
+
+# -- Samsung Dock Keyboard
+# insmod /system/lib/modules/sec_dock_keyboard.ko

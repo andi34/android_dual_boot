@@ -1,0 +1,26 @@
+#!/sbin/busybox sh
+
+if [ "a$2" != "a" ];then
+  CM101=0
+  CM102=0
+  [ -f /system/framework/framework2.jar ] || CM101=1
+  [ -f /system/framework/voip-common.jar ] && CM102=1
+  if [ "$CM101" == 1 ] || [ "$CM102" == 1 ]; then
+    mount -o remount,rw /system
+    case "$2" in
+      0)
+        sed -i "s/ro.sf.hwrotation=270/ro.sf.hwrotation=0/g" /system/build.prop
+        ;;
+      270)
+        sed -i "s/ro.sf.hwrotation=0/ro.sf.hwrotation=270/g" /system/build.prop
+        ;;
+    esac;
+    mount -o remount,ro /system
+  fi
+fi
+
+if [ $(grep -c ro.sf.hwrotation=270 /system/build.prop) -eq 1 ]; then
+  echo 270
+else
+  echo 0
+fi

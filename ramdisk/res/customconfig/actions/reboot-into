@@ -1,0 +1,10 @@
+#!/sbin/busybox sh
+
+if [ "a$2" != "a" ];then
+  if [ "$2" == "recovery" ];then
+    reboot recovery
+  else
+    echo -n $2 > /data/media/.defaultrom
+    reboot
+  fi
+fi
