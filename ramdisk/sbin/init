@@ -1,0 +1,63 @@
+#!/sbin/busybox sh
+
+# Ketut P. Kumajaya, Apr 2013, Nov 2013, Mar 2014
+# based on gokhanmoral's ramfs for SGS3
+# Do not remove above credits header!
+
+cd /
+
+/sbin/busybox mount -t proc proc /proc
+/sbin/busybox mount -t sysfs sysfs /sys
+
+# Galaxy Tab 2 block device
+# Don't use /dev/block/platform/*/by-name/* symlink!
+SYSTEMDEV="/dev/block/mmcblk0p9"
+DATADEV="/dev/block/mmcblk0p10"
+CACHEDEV="/dev/block/mmcblk0p7"
+
+# Normal boot
+/sbin/busybox mkdir -p /dev/block
+/sbin/busybox mknod $CACHEDEV b 179 7
+/sbin/busybox mknod $SYSTEMDEV b 259 1
+/sbin/busybox mknod $DATADEV b 259 2
+/sbin/busybox mknod /dev/block/loop0 b 7 0
+
+/sbin/busybox mkdir /mnt
+/sbin/busybox chmod 755 /mnt
+/sbin/busybox mkdir /.secondrom
+
+# Mount /data partition
+/sbin/busybox mount -t ext4 $DATADEV /.secondrom
+/sbin/busybox mount -t f2fs -o inline_xattr $DATADEV /.secondrom
+
+# Move .secondrom folder back to the original location if 4.2 moved it to a subfolder
+if /sbin/busybox [ -d /.secondrom/media/0/.secondrom ]; then
+  if /sbin/busybox [ ! -d /.secondrom/media/.secondrom ]; then
+    /sbin/busybox mkdir /.secondrom/media/.secondrom
+    /sbin/busybox mv -f /.secondrom/media/0/.secondrom/* /.secondrom/media/.secondrom
+    /sbin/busybox rmdir /.secondrom/media/0/.secondrom
+  fi
+fi
+
+NOBOOTMENU=0
+/sbin/busybox [ -f /.secondrom/media/.nobootmenu ] && NOBOOTMENU=1
+
+if /sbin/busybox [ -f /.secondrom/media/.secondrom/system.img ]; then
+  if /sbin/busybox [ "$NOBOOTMENU" == "0" ]; then
+    /sbin/busybox rm -f /sbin/ueventd
+    /sbin/busybox ln -s ../boot /sbin/ueventd
+    /sbin/busybox chmod 755 /boot
+    /sbin/busybox chmod 755 /sbin/killer.sh
+    exec /boot
+  else
+    /sbin/busybox rm -f /boot
+    /sbin/busybox rm -f /boot.rc
+    exec /sbin/init2
+  fi
+else
+  /sbin/busybox rm -f /boot
+  /sbin/busybox rm -f /boot.rc
+  # reset defaultrom
+  /sbin/busybox echo -n 0 > /.secondrom/media/.defaultrom
+  exec /sbin/init2
+fi

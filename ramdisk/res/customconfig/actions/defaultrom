@@ -1,0 +1,11 @@
+#!/sbin/busybox sh
+
+if [ "a$2" != "a" ];then
+  echo -n $2 > /data/media/.defaultrom
+fi
+
+if [ -f /data/media/.defaultrom ];then
+  cat /data/media/.defaultrom | awk '{ print $1 }'
+else
+  echo 0
+fi

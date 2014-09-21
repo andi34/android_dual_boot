@@ -1,0 +1,132 @@
+#!/sbin/busybox sh
+
+cat << ENDCONFIG
+<settingsRoot>
+  <settingsTab name="CPU">
+    <settingsPane description="" name="CPU Scaling Settings">
+     <spinner description="Set the CPU governor. Default: `cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`"
+               name="CPU Governor"
+               action="generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor">
+`
+for CPUGOV in \`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors\`;
+do
+  echo '         <spinnerItem name="'$CPUGOV'" value="'$CPUGOV'"/>'
+done
+`
+      </spinner>
+      <spinner description="Set the maximum frequency the CPU scales up to. Default: `expr \`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq\` / 1000` MHz." 
+               name="CPU max frequency" 
+               action="generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq">"
+`
+cat /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table | \
+sed -e 's/mhz//g;s/://g' | awk '{ print $1, $2 }' | \
+while read FREQ UVOLT; do
+  echo '         <spinnerItem name="'$FREQ' MHz" value="'${FREQ}000'"/>'
+done
+`
+       </spinner>
+      <spinner description="Set the minimum frequency the CPU scales down to. Default: `expr \`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq\` / 1000` MHz." 
+               name="CPU min frequency" 
+               action="generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq">"
+`
+cat /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table | \
+sed -e 's/mhz//g;s/://g' | awk '{ print $1, $2 }' | \
+while read FREQ UVOLT; do
+  echo '         <spinnerItem name="'$FREQ' MHz" value="'${FREQ}000'"/>'
+done
+`
+       </spinner>
+    </settingsPane>
+    <settingsPane description="Decreasing voltage will lower power consumption of the CPU. Increasing it on overclocked frequencies improves stability. Too low voltage may cause instabilities and freezes." 
+               name="CPU voltage control">
+      <checkbox description="Apply the settings on boot only if the desired settings prove to be stable, else the device ends up in a boot-loop." 
+                name="Set CPU voltage on boot" 
+                action="controlswitch CPU"
+                label="Set on boot"/>
+`
+cat /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table | \
+sed -e 's/mhz//g;s/://g' | awk '{ print $1, $2 }' | \
+while read FREQ UVOLT; do
+  echo '         <seekBar  description="Default voltage: '$UVOLT'mV"
+                   name="'${FREQ}' MHz step" 
+                   action="cpuvolt '${FREQ}'"
+                   unit=" mV" min="900" reversed="false" step="5" max="1450"/>"'
+  CPUFREQLIST="$CPUFREQLIST $FREQ"
+done
+`
+    </settingsPane>
+  </settingsTab>
+
+  <settingsTab name="GPU">
+    <settingsPane description="" name="GPU Scaling Settings">
+      <spinner description="Set the GPU governor. Default: `cat /sys/devices/platform/omap/pvrsrvkm.0/sgxfreq/governor`"
+               name="GPU governor" 
+               action="generic /sys/devices/platform/omap/pvrsrvkm.0/sgxfreq/governor">"
+`
+for GPUGOV in \`cat /sys/devices/platform/omap/pvrsrvkm.0/sgxfreq/governor_list\`;
+do
+  echo '         <spinnerItem name="'$GPUGOV'" value="'$GPUGOV'"/>'
+done
+`
+      </spinner>
+      <spinner description="Set the maximum frequency the GPU scales up to. Default: `expr \`cat /sys/devices/platform/omap/pvrsrvkm.0/sgxfreq/frequency_limit\` / 1000000` MHz"
+               name="GPU max frequency" 
+               action="generic /sys/devices/platform/omap/pvrsrvkm.0/sgxfreq/frequency_limit">"
+`
+for GPUFREQ in \`cat /sys/devices/platform/omap/pvrsrvkm.0/sgxfreq/frequency_list\`;
+do
+  echo '         <spinnerItem name="'$(expr $GPUFREQ / 1000000)' MHz" value="'${GPUFREQ}'"/>'
+done
+`
+      </spinner>
+    </settingsPane>
+    <settingsPane description="Other graphic related settings" name="Other Settings">
+      <!-- <seekBar description="FB earlysuspend delay to run CRT animation when you turn the screen off." 
+               name="FB Earlysuspend Delay" action="generickmem fbearlysuspend_delay 0 int" unit=" ms" min="0" reversed="false" step="100" max="500"/> -->
+      <spinner description="Default surfaceflinger orientation. Landscape mode is the only known solution for boot animation graphic glitch on CM and CM derivatives ROM."
+               name="Default Orientation" action="hwrotation">
+               <spinnerItem name="Portrait" value="270"/>
+               <spinnerItem name="Landscape" value="0"/>
+      </spinner>
+    </settingsPane>
+  </settingsTab>
+
+  <settingsTab name="Misc">
+    <settingsPane description="The displayed values on STweaks app do not correspond the current live values but the saved profile values that will be applied on boot! Default settings will only be set during early stages of booting (before init.d execution) and can be overriden by later scripts or apps." 
+                  name="General Info">
+    </settingsPane>
+    <settingsPane description="" name="Misc Settings">
+      <spinner description="This will set the I/O scheduler." name="I/O Scheduler" action="generic /sys/block/mmcblk0/queue/scheduler">
+`
+for IOSCHED in \`cat /sys/block/mmcblk0/queue/scheduler|sed -e 's/\]//;s/\[//'\`;
+do
+echo '             <spinnerItem name="'$IOSCHED'" value="'$IOSCHED'"/>'
+done
+`
+      </spinner>
+      <checkbox description="Enable or disable Android logger (needs reboot)" name="Android Logger" action="generic /tmp/logger" label="Android Logger"/>
+    </settingsPane>
+    <settingsPane description="" name="Kernel Modules">
+      <checkbox description="Enable or disable CIFS file system support (needs reboot)" name="CIFS File System" action="generic /tmp/cifs" label="CIFS File System"/>
+      <checkbox description="Enable or disable Xbox controller support (needs reboot). It may be necessary to have a powered USB hub."
+               name="Xbox Controller" action="generic /tmp/xbox" label="Xbox Controller"/>
+      <checkbox description="Enable or disable compatible USB modem support (needs reboot). It may be necessary to have a powered USB hub. PPP Widget app from Josua Dietze needed."
+               name="USB Modem" action="generic /tmp/usbmodem" label="USB Modem"/>
+      <checkbox description="Enable or disable Samsung dock keyboard support (needs reboot)" name="Samsung Dock Keyboard" action="generic /tmp/sec_keyboard" label="Samsung Dock Keyboard"/>
+    </settingsPane>
+  </settingsTab>
+
+  <settingsTab name="Dual Boot">
+    <settingsPane description="Warning: No confirmation will be asked for reboot buttons." name="Dual Boot Settings">
+      <button description="Reboot into 1st ROM" name="Reboot into 1st ROM" action="reboot-into 0" label="Reboot into 1st ROM"/>
+      <button description="Reboot into 2nd ROM. If you don't have 2nd ROM installation 1st ROM will be booted." name="Reboot into 2nd ROM" action="reboot-into 1" label="Reboot into 2nd ROM"/>
+      <button description="Reboot into recovery" name="Reboot into recovery" action="reboot-into recovery" label="Reboot into recovery"/>
+      <checkbox description="Check this if you don't want boot menu to be shown. If this options is checked, boot menu will not be shown even if you have 2nd ROM installed." name="No boot-menu" action="no-boot-menu" label="No boot-menu"/>
+      <spinner description="Default ROM to boot into. If you don't have 2nd ROM installation 1st ROM will be booted." name="Default ROM" action="defaultrom">
+             <spinnerItem name="1st ROM" value="0"/> 
+             <spinnerItem name="2nd ROM" value="1"/> 
+      </spinner>
+    </settingsPane>
+  </settingsTab>
+</settingsRoot>
+ENDCONFIG
