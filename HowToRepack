@@ -1,0 +1,18 @@
+# 1. Split image file into kernel and ramdisk parts
+./unmkbootimg boot.img > output.txt
+
+# 2. Decompress ramdisk into real files
+mkdir -p ramdisk
+cd ramdisk
+lzma -dc ../initramfs.cpio.gz | cpio -i
+
+# if gzip:
+# gunzip -c ../initramfs.cpio.gz | cpio -i
+
+# 3. Make changes to your Ramdisk
+
+# 4. Compress the files back into a ramdisk, lzma compressed
+find . | cpio -o -H newc | lzma > ../newramdisk.cpio.gz
+cd ..
+
+tools/mkbootimg --kernel zImage --ramdisk newramdisk.cpio.gz --base 0x80000000 --cmdline 'console=ttyO2,115200n8 mem=1024M androidboot.console=ttyO2 vram=20M omapfb.vram=0:16M' -o new_boot.img
