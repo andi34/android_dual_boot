@@ -78,10 +78,6 @@ on fs
 
     mount debugfs /sys/kernel/debug /sys/kernel/debug
 
-    # blackhawk: busybox permissions for ordinary users
-    chmod 0755 /sbin
-    chmod 0755 /sbin/busybox
-
 # pvr module
     # blackhawk - loaded by post-init.sh
     # insmod /system/lib/modules/pvrsrvkm_sgx540_120.ko

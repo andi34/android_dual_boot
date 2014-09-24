@@ -7,3 +7,4 @@ ro.allow.mock.location=0
 ro.debuggable=1
 persist.sys.usb.config=mtp,adb
 ro.boot.selinux=disabled
+persist.sys.adb.shell=/sbin/ext/sh

@@ -78,10 +78,6 @@ on fs
 
     mount debugfs /sys/kernel/debug /sys/kernel/debug
 
-    # blackhawk: busybox permissions for ordinary users
-    chmod 0755 /sbin
-    chmod 0755 /sbin/busybox
-
 # Restorecon
     restorecon /efs/nv_data.bin
     restorecon /efs/nv_data.bin.md5
