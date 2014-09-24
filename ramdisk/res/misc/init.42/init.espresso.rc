@@ -111,8 +111,6 @@ on fs
     mount_all /fstab.espresso
 
     # blackhawk: mount /system as ext4 or f2fs filesystem
-    mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/FACTORYFS /system rw noatime nodiratime wait
-    mount f2fs /dev/block/platform/omap/omap_hsmmc.1/by-name/FACTORYFS /system rw noatime nodiratime background_gc=off inline_xattr active_logs=2 wait
     mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/HIDDEN /preload rw noatime nodiratime wait
     mount f2fs /dev/block/platform/omap/omap_hsmmc.1/by-name/HIDDEN /preload rw noatime nodiratime background_gc=off inline_xattr active_logs=2 wait
 
@@ -123,10 +121,6 @@ on fs
 
     chown radio system /efs
     chmod 0775 /efs
-
-    # blackhawk: busybox permissions for ordinary users
-    chmod 0755 /sbin
-    chmod 0755 /sbin/busybox
 
 # change permissions for mtd device
 	chmod 0660 /dev/mtd/mtd0

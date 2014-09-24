@@ -27,8 +27,11 @@ CACHEDEV="/dev/block/mmcblk0p7"
 /sbin/busybox mkdir /.secondrom
 
 # Mount /data partition
-/sbin/busybox mount -t ext4 $DATADEV /.secondrom
-/sbin/busybox mount -t f2fs -o inline_xattr $DATADEV /.secondrom
+if /sbin/busybox blkid $DATADEV | /sbin/busybox grep -q "ext4"; then
+  /sbin/busybox mount -t ext4 -o noatime,nodiratime $DATADEV /.secondrom
+else
+  /sbin/busybox mount -t f2fs -o noatime,nodiratime,background_gc=off,inline_xattr,active_logs=2 $DATADEV /.secondrom
+fi
 
 # Move .secondrom folder back to the original location if 4.2 moved it to a subfolder
 if /sbin/busybox [ -d /.secondrom/media/0/.secondrom ]; then

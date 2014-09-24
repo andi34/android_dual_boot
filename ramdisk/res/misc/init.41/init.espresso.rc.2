@@ -87,10 +87,6 @@ on fs
     chown radio system /efs
     chmod 0775 /efs
 
-    # blackhawk: busybox permissions for ordinary users
-    chmod 0755 /sbin
-    chmod 0755 /sbin/busybox
-
 # for LogMeIn
     # blackhawk
     # mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/FACTORYFS /system rw wait noatime remount

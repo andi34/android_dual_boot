@@ -51,20 +51,12 @@ on fs
     chown radio system /efs
     chmod 0775 /efs
 
-    # blackhawk: mount /system as ext4 or f2fs filesystem
-    mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/FACTORYFS /system rw noatime nodiratime wait
-    mount f2fs /dev/block/platform/omap/omap_hsmmc.1/by-name/FACTORYFS /system rw noatime nodiratime background_gc=off inline_xattr active_logs=2 wait
-
     # blackhawk: link /system/lib/modules to /lib/modules
     exec /sbin/ext/modules.sh
 
     setprop ro.crypto.fuse_sdcard true
 
     mount debugfs /sys/kernel/debug /sys/kernel/debug
-
-    # blackhawk: busybox permissions for ordinary users
-    chmod 0755 /sbin
-    chmod 0755 /sbin/busybox
 
 # Restorecon
     restorecon /efs/nv_data.bin

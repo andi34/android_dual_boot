@@ -31,8 +31,11 @@ else
   fi
 fi
 
-/sbin/busybox mount -t ext4 $SYSTEMDEV /system
-/sbin/busybox mount -t f2fs -o inline_xattr $SYSTEMDEV /system
+if /sbin/busybox blkid $SYSTEMDEV | /sbin/busybox grep -q "ext4"; then
+  /sbin/busybox mount -t ext4 -o noatime,nodiratime $SYSTEMDEV /system
+else
+  /sbin/busybox mount -t f2fs -o noatime,nodiratime,background_gc=off,inline_xattr,active_logs=2 $SYSTEMDEV /system
+fi
 
 /sbin/busybox mkdir -p /.secondrom/media/0
 
@@ -55,6 +58,7 @@ if /sbin/busybox [ "$MIUI" == 1 ]; then
   /sbin/busybox mv -f /res/misc/init.miui/sbin/* /sbin/
   /sbin/busybox mv -f /res/misc/init.miui/sbin/boot/* /sbin/boot/
   /sbin/busybox chmod 755 /charger
+  /sbin/fstab.sh $DEFAULTROM MIUI
 else
   if /sbin/busybox [ "$CM110" == 1 ]; then
       /sbin/busybox echo 1 > /proc/sys/kernel/rom_feature_set
@@ -63,6 +67,7 @@ else
       /sbin/busybox mv -f /res/misc/init.cm11.0/sbin/* /sbin/
       /sbin/busybox mv -f /res/misc/init.cm11.0/sbin/boot/* /sbin/boot/
       /sbin/busybox chmod 755 /charger
+      /sbin/fstab.sh $DEFAULTROM CM110
   else
     if /sbin/busybox [ "$CM102" == 1 ]; then
       /sbin/busybox echo 1 > /proc/sys/kernel/rom_feature_set
@@ -71,6 +76,7 @@ else
       /sbin/busybox mv -f /res/misc/init.cm10.2/sbin/* /sbin/
       /sbin/busybox mv -f /res/misc/init.cm10.2/sbin/boot/* /sbin/boot/
       /sbin/busybox chmod 755 /charger
+      /sbin/fstab.sh $DEFAULTROM CM102
     else
       if /sbin/busybox [ "$CM101" == 1 ]; then
         /sbin/busybox echo 1 > /proc/sys/kernel/rom_feature_set
@@ -79,6 +85,7 @@ else
         /sbin/busybox mv -f /res/misc/init.cm10.1/sbin/* /sbin/
         /sbin/busybox mv -f /res/misc/init.cm10.1/sbin/boot/* /sbin/boot/
         /sbin/busybox chmod 755 /charger
+        /sbin/fstab.sh $DEFAULTROM CM101
       else
         if /sbin/busybox [ "$SAMMY42" == 1 ]; then
           /sbin/busybox echo 0 > /proc/sys/kernel/rom_feature_set
@@ -87,6 +94,7 @@ else
           /sbin/busybox mv -f /res/misc/init.42/sbin/* /sbin/
           /sbin/busybox mv -f /res/misc/init.42/sbin/boot/* /sbin/boot/
           /sbin/busybox chmod 755 /charger
+          /sbin/fstab.sh $DEFAULTROM SAMMY42
         else
           /sbin/busybox echo 0 > /proc/sys/kernel/rom_feature_set
           /sbin/busybox echo 0 > /sys/devices/platform/omapfb/vsync_mode
@@ -95,33 +103,21 @@ else
           /sbin/busybox mv -f /res/misc/init.41/sbin/boot/* /sbin/boot/
           /sbin/busybox chmod 755 /sbin/bootanimation.sh
           /sbin/busybox chmod 755 /sbin/sdcard
+          /sbin/fstab.sh $DEFAULTROM SAMMY41
         fi
       fi
     fi
   fi
 fi
 
-F2FS=0
-
-if /sbin/busybox [ $(/sbin/busybox blkid $DATADEV | /sbin/busybox grep -c "ext4") -eq 0 ]; then
-  F2FS=1
-fi
-
 if /sbin/busybox [ "$DEFAULTROM" == "1" ]; then
   /sbin/busybox mv -f /init.rc.2 /init.rc
   /sbin/busybox mv -f /init.espresso.rc.2 /init.espresso.rc
-  if /sbin/busybox [ "$F2FS" == "1" ]; then
-    /sbin/busybox mv -f /fstab.espresso.f2fs.2 /fstab.espresso
-  else
-    /sbin/busybox mv -f /fstab.espresso.2 /fstab.espresso
-  fi
-else
-  if /sbin/busybox [ "$F2FS" == "1" ]; then
-    /sbin/busybox mv -f /fstab.espresso.f2fs /fstab.espresso
-  fi
 fi
 
-/sbin/busybox rm -f /init.espresso.rc.2 /fstab.espresso.2 /fstab.espresso.f2fs /fstab.espresso.f2fs.2
+/sbin/busybox rm -f /sbin/fstab.sh
+/sbin/busybox rm -f /init.rc.2
+/sbin/busybox rm -f /init.espresso.rc.2 
 /sbin/busybox ln -s /fstab.espresso /fstab.espresso10
 
 /sbin/busybox umount -d -f /system
@@ -129,11 +125,14 @@ fi
 /sbin/busybox umount -f /dev/pts
 
 /sbin/busybox chmod 755 /innt
+/sbin/busybox chmod 755 /*.sh
 /sbin/busybox chmod 644 /*.espresso*
 /sbin/busybox chmod 644 /*.rc
 /sbin/busybox chmod 644 /*.prop
 /sbin/busybox chmod -R 755 /lib
+/sbin/busybox chmod 755 /sbin
 /sbin/busybox chmod 755 /sbin/boot-patch.sh
+/sbin/busybox chmod 755 /sbin/busybox
 /sbin/busybox chmod 755 /sbin/ext/db-bindmount.sh
 /sbin/busybox chmod 755 /sbin/ext/modules.sh
 /sbin/busybox chmod 755 /sbin/post-boot.sh
