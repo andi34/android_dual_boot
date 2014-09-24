@@ -54,18 +54,11 @@ on init
 on fs
     mount_all /fstab.samsunggolden
 
-    # blackhawk: mount /system as ext4 filesystem
-    mount ext4 /dev/block/mmcblk0p22 /system rw noatime nodiratime wait
-
     # blackhawk: link /system/lib/modules to /lib/modules
     exec /sbin/ext/modules.sh
 
     setprop ro.crypto.fuse_sdcard true
     start cspsa
-
-    # blackhawk: busybox permissions for ordinary users
-    chmod 0755 /sbin
-    chmod 0755 /sbin/busybox
 
 on post-fs
     chown radio radio /modemfs

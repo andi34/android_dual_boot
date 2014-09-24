@@ -47,8 +47,9 @@ on fs
     # blackhawk: bind mount 2nd ROM's data to /data
     start db-bindmount
 
-    # blackhawk: mount /system as ext4 filesystem
+    # blackhawk: mount /system as ext4 or f2fs filesystem
     mount ext4 loop@/.secondrom/media/.secondrom/system.img /system rw noatime nodiratime wait
+    mount f2fs loop@/.secondrom/media/.secondrom/system.img /system rw noatime nodiratime background_gc=off inline_xattr active_logs=2 wait
 
     # blackhawk: link /system/lib/modules to /lib/modules
     start modules-link
@@ -73,10 +74,6 @@ on fs
     # the block device belonging to /data.
     start cspsa
     exec /system/bin/logwrapper /system/bin/factoryreset -f /sys/socinfo/reset_reason -r factory-reset -c CSPSA0 -p 0xfffffffc:31 /dev/block/mmcblk0p5
-
-    # blackhawk: busybox permissions for ordinary users
-    chmod 0755 /sbin
-    chmod 0755 /sbin/busybox
 
 on post-fs
 

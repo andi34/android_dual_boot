@@ -57,8 +57,9 @@ on fs
     # blackhawk: bind mount 2nd ROM's data to /data
     exec /sbin/ext/db-bindmount.sh
 
-    # blackhawk: mount /system as ext4 filesystem
+    # blackhawk: mount /system as ext4 or f2fs filesystem
     mount ext4 loop@/.secondrom/media/.secondrom/system.img /system rw noatime nodiratime wait
+    mount f2fs loop@/.secondrom/media/.secondrom/system.img /system rw noatime nodiratime background_gc=off inline_xattr active_logs=2 wait
 
     # blackhawk: link /system/lib/modules to /lib/modules
     exec /sbin/ext/modules.sh
