@@ -25,6 +25,7 @@ fi
 SYSTEMDEV="/dev/block/mmcblk0p22"
 CACHEDEV="/dev/block/mmcblk0p23"
 DATADEV="/dev/block/mmcblk0p25"
+HIDDENDEV="/dev/block/mmcblk0p24"
 
 # Normal boot
 /sbin/busybox rm -f /sbin/lpm
@@ -32,6 +33,7 @@ DATADEV="/dev/block/mmcblk0p25"
 /sbin/busybox mknod $SYSTEMDEV b 179 22; # /system
 /sbin/busybox mknod $CACHEDEV b 179 23; # /cache
 /sbin/busybox mknod $DATADEV b 179 25; # /data
+/sbin/busybox mknod $HIDDENDEV b 179 24; # /preload
 /sbin/busybox mknod /dev/block/loop0 b 7 0
 
 /sbin/busybox mkdir /mnt
