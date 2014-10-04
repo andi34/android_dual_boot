@@ -40,9 +40,9 @@ if /sbin/busybox echo "$1" | /sbin/busybox grep -q "1"; then
   DATAPOINT="/.secondrom"
 else
   if /sbin/busybox blkid $SYSTEMDEV | /sbin/busybox grep -q "ext4"; then
-    /sbin/busybox echo "$SYSTEMDEV    /system        ext4    ro,noatime,nodiratime    wait" >> $FSTAB
+    /sbin/busybox echo "$SYSTEMDEV    /system        ext4    rw,noatime,nodiratime    wait" >> $FSTAB
   else
-    /sbin/busybox echo "$SYSTEMDEV    /system        f2fs    ro,noatime,nodiratime,$F2FSOPB" >> $FSTAB
+    /sbin/busybox echo "$SYSTEMDEV    /system        f2fs    rw,noatime,nodiratime,$F2FSOPB" >> $FSTAB
   fi
 fi
 
