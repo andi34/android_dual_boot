@@ -1,0 +1,146 @@
+cd ramdisk
+mkdir -p data
+chmod -R 771 data
+
+mkdir -p dev
+chmod -R 755 dev
+
+mkdir -p lib/modules
+chmod -R 755 lib
+cd lib/modules
+chmod 644 *
+cd ../..
+
+mkdir -p proc
+chmod -R 755 proc
+
+mkdir -p res/customconfig/actions
+mkdir -p res/images/charger
+mkdir -p res/misc
+chmod -R 755 res
+
+cd res
+chmod 644 uci.sh
+
+cd customconfig
+chmod 644 *
+chmod 755 -R actions
+cd actions
+chmod 644 *
+cd ../..
+
+cd images/charger
+chmod 644 *
+cd ../..
+
+cd misc
+chmod 644 02modules
+chmod 644 90userinit
+chmod 644 bootmenu.zip
+chmod 644 compcache
+chmod 644 post_boot.sh
+chmod 644 power.piranha.so
+chmod 644 su
+chmod 644 version.txt
+
+cd init.41
+chmod 644 *
+chmod 755 -R sbin
+cd sbin
+chmod 644 *
+chmod 755 -R boot
+cd boot
+chmod 644 *
+cd ../../..
+
+cd init.42
+chmod 644 *
+chmod 755 -R sbin
+cd sbin
+chmod 644 *
+chmod 755 -R boot
+cd boot
+chmod 644 *
+cd ../../..
+
+cd init.cm10.1
+chmod 644 *
+chmod 755 -R sbin
+cd sbin
+chmod 644 *
+chmod 755 -R boot
+cd boot
+chmod 644 *
+cd ../../..
+
+cd init.cm10.2
+chmod 644 *
+chmod 755 -R sbin
+cd sbin
+chmod 644 *
+chmod 755 -R boot
+cd boot
+chmod 644 *
+cd ../../..
+
+cd init.cm11.0
+chmod 644 *
+chmod 755 -R sbin
+cd sbin
+chmod 644 *
+chmod 755 -R boot
+cd boot
+chmod 644 *
+cd ../../..
+
+cd init.miui
+chmod 644 *
+chmod 755 -R sbin
+cd sbin
+chmod 644 *
+chmod 755 -R boot
+cd boot
+chmod 644 *
+cd ../../..
+
+cd ../..
+
+mkdir sbin
+chmod -R 750 sbin
+cd sbin
+chmod 750 adbd
+chmod 750 aroma
+chmod 750 bootmenu/sh
+chmod 750 busybox
+chmod 750 charger
+chmod 750 fstab.sh
+chmod 750 healthd
+chmod 750 init
+chmod 750 init2
+chmod 750 killer.sh
+chmod 750 lpm
+chmod -R 750 boot
+cd boot
+chmod 750 *
+cd ..
+chmod -R 750 ext
+cd ext
+chmod 750 *
+cd ../..
+
+mkdir -p sys
+chmod -R 755 sys
+
+mkdir -p system/bin
+chmod -R 755 system
+cd system/bin
+chmod 755 e2fsck
+cd ../..
+
+mkdir -p tmp
+chmod 755 tmp
+chmod 644 boot
+chmod 644 boot.rc
+chmod 644 ueventd.rc
+chmod 644 ueventd.espresso*
+cd ..
