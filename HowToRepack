@@ -1,0 +1,16 @@
+# 1. Split image file into kernel and ramdisk parts
+./unmkbootimg boot.img > output.txt
+
+# 2. Decompress ramdisk into real files
+mkdir -p ramdisk
+cd ramdisk
+gunzip -c ../initramfs.cpio.gz | cpio -i
+# lzma -dc ../initramfs.cpio.gz | cpio -i
+
+# 3. Make changes to your Ramdisk
+
+# 4. Compress the files back into a ramdisk
+find . | cpio -o -H newc | lzma > ../newramdisk.cpio.gz
+cd ..
+
+tools/mkbootimg --kernel zImage --ramdisk newramdisk.cpio.gz --base 0x0 --cmdline 'androidboot.selinux=permissive' -o new_boot.img
