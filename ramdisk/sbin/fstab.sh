@@ -1,9 +1,9 @@
 #!/sbin/busybox sh
 
-# Ketut P. Kumajaya, Sept 2014
+# Ketut P. Kumajaya, Sept 2014, Oct 2014
 # Do not remove above credits header!
 
-# Usage: fstab.sh [0|1] [miui|cm110|cm102|cm101|sammy41|sammy42]
+# Usage: fstab.sh [0|1] [cm110]
 
 EXT4OPT="noatime,nosuid,nodev,discard,noauto_da_alloc,journal_async_commit,errors=panic    wait,check"
 F2FSOPB="background_gc=off,inline_xattr,active_logs=2    wait"
@@ -14,21 +14,21 @@ FSTAB=/fstab.espresso
 
 # Don't use /dev/block/platform/*/by-name/* symlink, not available when ueventd not started yet!
 SYSTEMDEV="\
-/dev/block/mmcblk0p9                                    "
+/dev/block/mmcblk0p9                               "
 DATADEV="\
-/dev/block/mmcblk0p10                                   "
+/dev/block/mmcblk0p10                              "
 CACHEDEV="\
-/dev/block/mmcblk0p7                                    "
+/dev/block/mmcblk0p7                               "
 HIDDENDEV="\
-/dev/block/mmcblk0p11                                   "; # Same as CACHEDEV for a common /cache
+/dev/block/mmcblk0p11                              "; # Same as CACHEDEV for a common /cache
 
 # No problem with /dev/block/platform/*/by-name/* symlink, blkid is not use here.
 EFS="\
-/dev/block/platform/omap/omap_hsmmc.1/by-name/EFS           /efs           ext4    nodiratime,$EXT4OPT"
+/dev/block/platform/omap/omap_hsmmc.1/by-name/EFS      /efs           ext4    nodiratime,$EXT4OPT"
 
 CM110="
-/devices/platform/omap/omap_hsmmc.0/mmc_host/mmc1               auto    auto    defaults    voldmanaged=sdcard1:auto
-/devices/platform/omap/musb-omap2430/musb-hdrc/usb1             auto    auto    defaults    voldmanaged=usbdisk0:auto"
+/devices/platform/omap/omap_hsmmc.0/mmc_host/mmc1      auto    auto    defaults    voldmanaged=sdcard1:auto
+/devices/platform/omap/musb-omap2430/musb-hdrc/usb1    auto    auto    defaults    voldmanaged=usbdisk0:auto"
 
 
 DATAPOINT="/data      "
@@ -60,12 +60,7 @@ else
   /sbin/busybox echo "$DATADEV    $DATAPOINT    f2fs    $F2FSOPT,encryptable=footer" >> $FSTAB
 fi
 
-
 if /sbin/busybox echo "$2" | /sbin/busybox grep -q -i "CM110"; then
-  /sbin/busybox echo -e "$CM110" >> $FSTAB
-fi
-
-if /sbin/busybox echo "$2" | /sbin/busybox grep -q -i "CM102"; then
   /sbin/busybox echo -e "$CM110" >> $FSTAB
 fi
 
