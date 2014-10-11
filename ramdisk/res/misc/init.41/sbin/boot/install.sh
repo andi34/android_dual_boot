@@ -5,10 +5,6 @@ set_perm() {
   busybox chmod $3 $4
 }
 
-ch_con() {
-  busybox chcon u:object_r:system_file:s0 $1
-}
-
 if busybox [ ! -f /system/blackhawk-next/release-$VERSION- ]; then
   # Remount system RW
   busybox mount -o remount,rw /system
@@ -34,9 +30,6 @@ if busybox [ ! -f /system/blackhawk-next/release-$VERSION- ]; then
   set_perm 0 0 0777 /system/bin/.ext
   set_perm 0 0 06755 /system/bin/.ext/.su
   set_perm 0 0 06755 /system/xbin/su
-
-  ch_con /system/bin/.ext/.su
-  ch_con /system/xbin/su
 
   /system/xbin/su --install
 
