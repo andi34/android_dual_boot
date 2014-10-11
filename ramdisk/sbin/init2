@@ -56,13 +56,13 @@ else
       /sbin/busybox mv -f /res/misc/init.cm10.2/* /
       /sbin/busybox mv -f /res/misc/init.cm10.2/sbin/* /sbin/
       /sbin/busybox mv -f /res/misc/init.cm10.2/sbin/boot/* /sbin/boot/
-      /sbin/fstab.sh $DEFAULTROM CM102
+      /sbin/fstab.sh $DEFAULTROM CM110
   else
     /sbin/busybox echo 0 > /proc/sys/kernel/rom_feature_set
     /sbin/busybox mv -f /res/misc/init.41/* /
     /sbin/busybox mv -f /res/misc/init.41/sbin/* /sbin/
     /sbin/busybox mv -f /res/misc/init.41/sbin/boot/* /sbin/boot/
-    /sbin/fstab.sh $DEFAULTROM SAMMY41
+    /sbin/fstab.sh $DEFAULTROM
   fi
 fi
 
@@ -79,6 +79,7 @@ fi
 /sbin/busybox umount -f /.secondrom
 /sbin/busybox umount -f /dev/pts
 
+/sbin/busybox chmod 755 /charger
 /sbin/busybox chmod 755 /innt
 /sbin/busybox chmod 755 /*.sh
 /sbin/busybox chmod 644 /*.samsunggolden*

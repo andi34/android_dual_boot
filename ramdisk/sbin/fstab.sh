@@ -1,9 +1,9 @@
 #!/sbin/busybox sh
 
-# Ketut P. Kumajaya, Sept 2014
+# Ketut P. Kumajaya, Sept 2014, Oct 2014
 # Do not remove above credits header!
 
-# Usage: fstab.sh [0|1] [cm110|cm102|sammy41]
+# Usage: fstab.sh [0|1] [cm110]
 
 EXT4OPT="noatime,nosuid,nodev,discard,noauto_da_alloc,journal_async_commit,errors=panic    wait,check"
 F2FSOPB="background_gc=off,inline_xattr,active_logs=2    wait"
@@ -62,10 +62,6 @@ fi
 
 
 if /sbin/busybox echo "$2" | /sbin/busybox grep -q -i "CM110"; then
-  /sbin/busybox echo -e "$CM110" >> $FSTAB
-fi
-
-if /sbin/busybox echo "$2" | /sbin/busybox grep -q -i "CM102"; then
   /sbin/busybox echo -e "$CM110" >> $FSTAB
 fi
 
