@@ -44,9 +44,6 @@ on fs
 
     mount_all /fstab.samsunggolden
 
-    # blackhawk: mount /system as ext4 filesystem
-    mount ext4 /dev/block/mmcblk0p22 /system rw noatime nodiratime wait
-
     # blackhawk: link /system/lib/modules to /lib/modules
     start modules-link
 
@@ -68,10 +65,6 @@ on fs
     # the block device belonging to /data.
     start cspsa
     exec /system/bin/logwrapper /system/bin/factoryreset -f /sys/socinfo/reset_reason -r factory-reset -c CSPSA0 -p 0xfffffffc:31 /dev/block/mmcblk0p5
-
-    # blackhawk: busybox permissions for ordinary users
-    chmod 0755 /sbin
-    chmod 0755 /sbin/busybox
 
 on post-fs
 
