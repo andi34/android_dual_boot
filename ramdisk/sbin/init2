@@ -1,6 +1,6 @@
 #!/sbin/busybox sh
 
-# Ketut P. Kumajaya, Apr 2013, Nov 2013, Mar 2014
+# Ketut P. Kumajaya, Apr 2013, Nov 2013, Mar 2014, Oct 2014
 # based on gokhanmoral's ramfs for SGS3
 # Do not remove above credits header!
 
@@ -57,8 +57,7 @@ if /sbin/busybox [ "$MIUI" == 1 ]; then
   /sbin/busybox mv -f /res/misc/init.miui/* /
   /sbin/busybox mv -f /res/misc/init.miui/sbin/* /sbin/
   /sbin/busybox mv -f /res/misc/init.miui/sbin/boot/* /sbin/boot/
-  /sbin/busybox chmod 755 /charger
-  /sbin/fstab.sh $DEFAULTROM MIUI
+  /sbin/fstab.sh $DEFAULTROM
 else
   if /sbin/busybox [ "$CM110" == 1 ]; then
       /sbin/busybox echo 1 > /proc/sys/kernel/rom_feature_set
@@ -66,7 +65,6 @@ else
       /sbin/busybox mv -f /res/misc/init.cm11.0/* /
       /sbin/busybox mv -f /res/misc/init.cm11.0/sbin/* /sbin/
       /sbin/busybox mv -f /res/misc/init.cm11.0/sbin/boot/* /sbin/boot/
-      /sbin/busybox chmod 755 /charger
       /sbin/fstab.sh $DEFAULTROM CM110
   else
     if /sbin/busybox [ "$CM102" == 1 ]; then
@@ -75,8 +73,7 @@ else
       /sbin/busybox mv -f /res/misc/init.cm10.2/* /
       /sbin/busybox mv -f /res/misc/init.cm10.2/sbin/* /sbin/
       /sbin/busybox mv -f /res/misc/init.cm10.2/sbin/boot/* /sbin/boot/
-      /sbin/busybox chmod 755 /charger
-      /sbin/fstab.sh $DEFAULTROM CM102
+      /sbin/fstab.sh $DEFAULTROM CM110
     else
       if /sbin/busybox [ "$CM101" == 1 ]; then
         /sbin/busybox echo 1 > /proc/sys/kernel/rom_feature_set
@@ -84,8 +81,7 @@ else
         /sbin/busybox mv -f /res/misc/init.cm10.1/* /
         /sbin/busybox mv -f /res/misc/init.cm10.1/sbin/* /sbin/
         /sbin/busybox mv -f /res/misc/init.cm10.1/sbin/boot/* /sbin/boot/
-        /sbin/busybox chmod 755 /charger
-        /sbin/fstab.sh $DEFAULTROM CM101
+        /sbin/fstab.sh $DEFAULTROM
       else
         if /sbin/busybox [ "$SAMMY42" == 1 ]; then
           /sbin/busybox echo 0 > /proc/sys/kernel/rom_feature_set
@@ -93,8 +89,7 @@ else
           /sbin/busybox mv -f /res/misc/init.42/* /
           /sbin/busybox mv -f /res/misc/init.42/sbin/* /sbin/
           /sbin/busybox mv -f /res/misc/init.42/sbin/boot/* /sbin/boot/
-          /sbin/busybox chmod 755 /charger
-          /sbin/fstab.sh $DEFAULTROM SAMMY42
+          /sbin/fstab.sh $DEFAULTROM
         else
           /sbin/busybox echo 0 > /proc/sys/kernel/rom_feature_set
           /sbin/busybox echo 0 > /sys/devices/platform/omapfb/vsync_mode
@@ -103,7 +98,7 @@ else
           /sbin/busybox mv -f /res/misc/init.41/sbin/boot/* /sbin/boot/
           /sbin/busybox chmod 755 /sbin/bootanimation.sh
           /sbin/busybox chmod 755 /sbin/sdcard
-          /sbin/fstab.sh $DEFAULTROM SAMMY41
+          /sbin/fstab.sh $DEFAULTROM
         fi
       fi
     fi
@@ -124,6 +119,7 @@ fi
 /sbin/busybox umount -f /.secondrom
 /sbin/busybox umount -f /dev/pts
 
+/sbin/busybox chmod 755 /charger
 /sbin/busybox chmod 755 /innt
 /sbin/busybox chmod 755 /*.sh
 /sbin/busybox chmod 644 /*.espresso*
